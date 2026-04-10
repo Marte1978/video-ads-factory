@@ -1,0 +1,25 @@
+{
+  "name": "video-ads-factory",
+  "version": "1.0.0",
+  "description": "Generador de video ads con Remotion + ElevenLabs TTS",
+  "scripts": {
+    "studio": "npx remotion studio src/index.tsx",
+    "render:blueberry": "npx remotion render src/index.tsx BlueberryAd out/blueberry-ad.mp4",
+    "tts": "node scripts/generate-tts.js",
+    "build": "node scripts/generate-tts.js && npx remotion render src/index.tsx BlueberryAd out/blueberry-ad.mp4"
+  },
+  "keywords": [],
+  "author": "WebFactory RD",
+  "license": "ISC",
+  "dependencies": {
+    "@remotion/cli": "^4.0.448",
+    "@remotion/player": "^4.0.448",
+    "@remotion/renderer": "^4.0.448",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "remotion": "^4.0.448",
+    "typescript": "^6.0.2"
+  }
+}
