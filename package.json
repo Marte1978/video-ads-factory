@@ -12,10 +12,8 @@
   "keywords": [],
   "author": "WebFactory RD",
   "license": "ISC",
-  "devDependencies": {
-    "express": "^4.22.1"
-  },
   "dependencies": {
+    "express": "^4.22.1",
     "@remotion/cli": "^4.0.448",
     "@remotion/player": "^4.0.448",
     "@remotion/renderer": "^4.0.448",
