@@ -1,112 +1,143 @@
 /**
  * generate-tts.js
- * Genera el audio del anuncio de Blueberry usando ElevenLabs API.
- * Guión mejorado con pausas naturales y número de teléfono lento.
+ * Script genérico para generar audio con ElevenLabs.
  *
- * Uso: node scripts/generate-tts.js
+ * Uso con texto directo:
+ *   node scripts/generate-tts.js --text "El texto aquí" --output audio/nombre.mp3
+ *
+ * Uso con archivo de texto:
+ *   node scripts/generate-tts.js --file scripts/scripts/vitamax.txt --output audio/vitamax-voice.mp3
+ *
+ * Opciones adicionales:
+ *   --voice  [voice_id]   ID de voz ElevenLabs (default: Gabriela)
  */
 
 const https = require('https')
 const fs    = require('fs')
 const path  = require('path')
 
+// ── Configuración ──────────────────────────────────────────────────────────────
 const ELEVENLABS_API_KEY = 'sk_44f31ae00a4badd0acec5e0855d665ffff18efae0f09dd6a'
 
-// ── Voces disponibles en ElevenLabs ────────────────────────────────────────
-// Rachel  (en) — elegante, femenina, clara
-// Antoni  (en) — masculina, joven, energética
-// Domi    (en) — femenina, fuerte
-// Bella   (en) — femenina, suave
-// Elli    (en) — femenina, emocional
-// Josh    (en) — masculina, joven
-// Arnold  (en) — masculina, imponente
-// Adam    (en) — masculina, narrativa
-// Sam     (en) — masculina, ronca
-// Liam    (es) — masculina española  (si está disponible en tu plan)
-// ─ Para español usa: voice_id de una voz multilingüe o clona tu propia voz
+// Gabriela — español latinoamericano, femenina, narrativa profesional
+const DEFAULT_VOICE_ID = 'hHjbwzYZW17oh0p05AKv'
 
-// ── Voz seleccionada ──────────────────────────────────────────────────────
-// Gabriela — femenina, español latinoamericano, voz profesional y narrativa
-// Es la voz más humana y realista en español disponible en la cuenta.
-// Alternativa masculina: Alberto Rodriguez (l1zE9xgNpUTaQCZzpNJa)
-const VOICE_ID = 'hHjbwzYZW17oh0p05AKv' // Gabriela - Spanish from Mexico Professional
-
-// Guión mejorado con pausas <break> y número de teléfono lento
-// SSML-compatible con ElevenLabs (usa <break time="Xs"/> para pausas)
-const SCRIPT = `
-¿Buscas el lugar perfecto para una experiencia gastronómica única?
-
-En Blueberry... encontrarás una cocina artesanal inspirada en los sabores del mundo,
-preparada con ingredientes frescos y mucho amor.
-
-Desayunos, almuerzos y meriendas... en un ambiente acogedor que te hará sentir en casa.
-
-Ubícanos en el Ensanche Naco, Santo Domingo.
-
-Para reservaciones, llámanos al...
-
-ocho... cero... nueve...
-
-dos... cuatro... siete...
-
-cinco... uno... ocho... cuatro.
-
-Blueberry. Sabor que inspira.
-`
-
-const OUTPUT_PATH = path.join(__dirname, '..', 'public', 'audio', 'blueberry-voice.mp3')
-
-const requestBody = JSON.stringify({
-  text: SCRIPT.trim(),
-  model_id: 'eleven_multilingual_v2',
-  voice_settings: {
-    stability: 0.65,           // Más estable = más pausado y natural
-    similarity_boost: 0.80,
-    style: 0.35,               // Algo de estilo expresivo
-    use_speaker_boost: true,
-  },
-})
-
-console.log('🎙️  Generando audio con ElevenLabs...')
-console.log('   Voz:', VOICE_ID)
-console.log('   Modelo: eleven_multilingual_v2')
-console.log('   Output:', OUTPUT_PATH)
-
-const options = {
-  hostname: 'api.elevenlabs.io',
-  path: `/v1/text-to-speech/${VOICE_ID}`,
-  method: 'POST',
-  headers: {
-    'xi-api-key': ELEVENLABS_API_KEY,
-    'Content-Type': 'application/json',
-    'Accept': 'audio/mpeg',
-    'Content-Length': Buffer.byteLength(requestBody),
-  },
+const VOICE_SETTINGS = {
+  stability:         0.55,
+  similarity_boost:  0.82,
+  style:             0.50,
+  use_speaker_boost: true,
 }
 
-const req = https.request(options, (res) => {
-  if (res.statusCode !== 200) {
-    let body = ''
-    res.on('data', (chunk) => { body += chunk })
-    res.on('end', () => {
-      console.error('❌  Error ElevenLabs:', res.statusCode, body)
+const OUTPUT_BASE_DIR = path.join(__dirname, '..', 'public')
+
+// ── Parsear argumentos CLI ─────────────────────────────────────────────────────
+function parseArgs(argv) {
+  const args = {}
+  for (let i = 2; i < argv.length; i++) {
+    const flag = argv[i]
+    if (flag.startsWith('--') && i + 1 < argv.length) {
+      const key   = flag.slice(2)
+      const value = argv[i + 1]
+      if (!value.startsWith('--')) {
+        args[key] = value
+        i++
+      }
+    }
+  }
+  return args
+}
+
+// ── Main ───────────────────────────────────────────────────────────────────────
+function main() {
+  const args = parseArgs(process.argv)
+
+  // Resolver texto
+  let text = ''
+  if (args.file) {
+    const filePath = path.resolve(args.file)
+    if (!fs.existsSync(filePath)) {
+      console.error('❌  Archivo no encontrado:', filePath)
       process.exit(1)
-    })
-    return
+    }
+    text = fs.readFileSync(filePath, 'utf-8').trim()
+    console.log('📄  Texto leído desde:', filePath)
+  } else if (args.text) {
+    text = args.text.trim()
+  } else {
+    console.error('❌  Debes pasar --text "..." o --file ruta.txt')
+    console.error('')
+    console.error('Uso:')
+    console.error('  node scripts/generate-tts.js --text "Tu texto" --output audio/salida.mp3')
+    console.error('  node scripts/generate-tts.js --file scripts/scripts/vitamax.txt --output audio/vitamax-voice.mp3')
+    process.exit(1)
   }
 
-  const out = fs.createWriteStream(OUTPUT_PATH)
-  res.pipe(out)
-  out.on('finish', () => {
-    const size = (fs.statSync(OUTPUT_PATH).size / 1024).toFixed(1)
-    console.log(`✅  Audio generado: ${OUTPUT_PATH} (${size} KB)`)
+  if (!args.output) {
+    console.error('❌  Falta --output ruta/nombre.mp3')
+    process.exit(1)
+  }
+
+  const voiceId    = args.voice || DEFAULT_VOICE_ID
+  const outputPath = path.join(OUTPUT_BASE_DIR, args.output)
+
+  // Asegurar que el directorio de salida existe
+  const outputDir = path.dirname(outputPath)
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true })
+    console.log('📁  Directorio creado:', outputDir)
+  }
+
+  const requestBody = JSON.stringify({
+    text,
+    model_id: 'eleven_multilingual_v2',
+    voice_settings: VOICE_SETTINGS,
   })
-})
 
-req.on('error', (e) => {
-  console.error('❌  Request error:', e.message)
-  process.exit(1)
-})
+  console.log('🎙️  Generando audio con ElevenLabs...')
+  console.log('   Voz ID :', voiceId)
+  console.log('   Modelo : eleven_multilingual_v2')
+  console.log('   Chars  :', text.length)
+  console.log('   Output :', outputPath)
 
-req.write(requestBody)
-req.end()
+  const options = {
+    hostname: 'api.elevenlabs.io',
+    path:     `/v1/text-to-speech/${voiceId}`,
+    method:   'POST',
+    headers: {
+      'xi-api-key':     ELEVENLABS_API_KEY,
+      'Content-Type':   'application/json',
+      'Accept':         'audio/mpeg',
+      'Content-Length': Buffer.byteLength(requestBody),
+    },
+  }
+
+  const req = https.request(options, (res) => {
+    if (res.statusCode !== 200) {
+      let body = ''
+      res.on('data', (chunk) => { body += chunk })
+      res.on('end', () => {
+        console.error('❌  Error ElevenLabs (' + res.statusCode + '):', body)
+        process.exit(1)
+      })
+      return
+    }
+
+    const out = fs.createWriteStream(outputPath)
+    res.pipe(out)
+    out.on('finish', () => {
+      const sizeKB = (fs.statSync(outputPath).size / 1024).toFixed(1)
+      console.log('✅  Audio generado:', outputPath, '(' + sizeKB + ' KB)')
+    })
+  })
+
+  req.on('error', (e) => {
+    console.error('❌  Request error:', e.message)
+    process.exit(1)
+  })
+
+  req.write(requestBody)
+  req.end()
+}
+
+main()

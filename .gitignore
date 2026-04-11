@@ -3,3 +3,9 @@ out/
 dist/
 .env
 *.log
+public/audio/*.mp3
+public/images/
+public/preview/
+.remotion/
+*.mp4
+*.mov

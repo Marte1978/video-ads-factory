@@ -6,11 +6,15 @@
     "studio": "npx remotion studio src/index.tsx",
     "render:blueberry": "npx remotion render src/index.tsx BlueberryAd out/blueberry-ad.mp4",
     "tts": "node scripts/generate-tts.js",
-    "build": "node scripts/generate-tts.js && npx remotion render src/index.tsx BlueberryAd out/blueberry-ad.mp4"
+    "build": "node scripts/generate-tts.js && npx remotion render src/index.tsx BlueberryAd out/blueberry-ad.mp4",
+    "panel": "node panel/server.js"
   },
   "keywords": [],
   "author": "WebFactory RD",
   "license": "ISC",
+  "devDependencies": {
+    "express": "^4.22.1"
+  },
   "dependencies": {
     "@remotion/cli": "^4.0.448",
     "@remotion/player": "^4.0.448",

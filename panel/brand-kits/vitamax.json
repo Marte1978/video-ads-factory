@@ -1,0 +1,50 @@
+{
+  "compositionId": "HealthTemplate",
+  "brandName": "VitaMax",
+  "productName": "VitaMax Articular",
+  "tagline": "Movilidad sin límites",
+
+  "hookQuestion": "¿Sientes dolor en tus articulaciones cada vez que te mueves?",
+  "hookEmoji": "🦵",
+
+  "symptoms": [
+    { "icon": "😣", "text": "Rodillas que duelen" },
+    { "icon": "🥱", "text": "Rigidez matutina" },
+    { "icon": "🚶", "text": "Movimiento limitado" }
+  ],
+
+  "ingredients": ["🦴 Colágeno", "🌿 Glucosamina", "☀️ Vitamina D", "🫐 Cúrcuma"],
+
+  "badgeText": "Fórmula Clínica Certificada",
+
+  "priceFinal": "RD$2,500",
+  "pricePerDay": "Solo RD$41 al día",
+  "offerText": "Llévate 3 frascos por el precio de 2",
+  "unitsLeft": 8,
+
+  "socialProof": "Más de 1,200 personas recuperaron su movilidad",
+
+  "ctaText": "📲 QUIERO MIS 3 FRASCOS",
+  "ctaSubtext": "Envío Gratis — WhatsApp",
+
+  "audioFile": "audio/vitamax-voice.mp3",
+
+  "ttsScript": "¿Sientes dolor en tus articulaciones cada vez que te mueves?\n\nRodillas que duelen. Rigidez al despertar. Movimiento que se va perdiendo.\nNo es normal. Y tiene solución.\n\nVitaMax Articular — fórmula clínica certificada,\ncon colágeno, glucosamina, vitamina D y cúrcuma...\npara regenerar tus articulaciones y devolverte la movilidad que mereces.\n\nMás de mil doscientas personas ya recuperaron su movilidad con VitaMax.\n\n¡OFERTA ESPECIAL! Llévate tres frascos por el precio de dos.\nSolo dos mil quinientos pesos. Solo cuarenta y un pesos al día.\nEnvío gratis. Pagas cuando recibes.\n\nQuedan solo ocho unidades disponibles.\nNo esperes más. Escríbenos por WhatsApp ahora y empieza a moverte sin dolor.",
+
+  "colors": {
+    "bg":        "#041A0A",
+    "bg2":       "#062A0F",
+    "primary":   "#16A34A",
+    "accent":    "#4ADE80",
+    "text":      "#FFFFFF",
+    "textMuted": "#86EFAC",
+    "highlight": "#FBBF24",
+    "cta":       "#16A34A",
+    "ctaText":   "#FFFFFF"
+  },
+
+  "background": {
+    "type": "gradient",
+    "gradientColors": ["#16A34A", "#4ADE80", "#041A0A"]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "compositionId": "BlueberryCandyAd",
+  "brandName": "Blueberry Candy",
+  "productName": "Blueberry Candy Suplemento Visual",
+
+  "hookQuestion": "¿Tus ojos están fallando... y tú ni lo sabes?",
+  "hookEmoji": "👁️",
+
+  "symptoms": [
+    { "icon": "😵", "text": "Vista borrosa" },
+    { "icon": "🔥", "text": "Ojos ardiendo" },
+    { "icon": "🤕", "text": "Dolores de cabeza" }
+  ],
+
+  "ingredients": [
+    { "icon": "🫐", "text": "Arándano" },
+    { "icon": "🌿", "text": "Luteína" },
+    { "icon": "🌿", "text": "Zeaxantina" },
+    { "icon": "💊", "text": "Vitamina A" }
+  ],
+
+  "badgeText": "100% Natural",
+
+  "priceFinal": "RD$1,990",
+  "pricePerDay": "Solo RD$33 al día",
+  "offerText": "Llévate 2 frascos por el precio de 1",
+  "unitsLeft": 14,
+
+  "socialProof": "Más de 2,500 pedidos en RD",
+
+  "ctaText": "📲 PEDIR LOS 2 FRASCOS",
+  "ctaSubtext": "Envío Gratis — WhatsApp",
+
+  "audioFile": "audio/candy-voice.mp3",
+
+  "ttsScript": "¿Tus ojos están fallando... y tú ni lo sabes?\n\nVista borrosa. Ojos ardiendo. Dolores de cabeza.\nSon señales. No las ignores.\n\nBlueberry Candy — cien por ciento natural,\ncon arándano, luteína y zeaxantina...\npara proteger y reparar tu visión desde adentro.\n\n¡OFERTA! Llévate dos frascos por solo mil novecientos noventa pesos.\nSolo treinta y tres pesos al día.\nEnvío gratis. Pagas cuando recibes.\n\nSolo quedan catorce unidades.\nEscríbenos por WhatsApp ahora.",
+
+  "colors": {
+    "bg":        "#0F0520",
+    "bg2":       "#1A0A35",
+    "primary":   "#8B5CF6",
+    "accent":    "#A78BFA",
+    "text":      "#FFFFFF",
+    "textMuted": "#C4B5FD",
+    "highlight": "#F59E0B",
+    "cta":       "#7C3AED",
+    "ctaText":   "#FFFFFF"
+  },
+
+  "background": {
+    "type": "gradient",
+    "gradientColors": ["#6B21A8", "#8B5CF6", "#0F0520"]
+  }
+}

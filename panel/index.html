@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video Ads Factory — WebFactory RD</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0D0D0D;
+      --surface:  #1A1A1A;
+      --surface2: #242424;
+      --border:   #2E2E2E;
+      --accent:   #6B48FF;
+      --accent2:  #9B76FF;
+      --success:  #22C55E;
+      --warning:  #F59E0B;
+      --error:    #EF4444;
+      --text:     #F1F1F1;
+      --muted:    #888888;
+      --font:     system-ui, -apple-system, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ─── Layout ─────────────────────────────────────── */
+    .app {
+      display: grid;
+      grid-template-rows: 56px 1fr;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ─── Header ─────────────────────────────────────── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 12px;
+    }
+
+    .header-logo { font-size: 24px; }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      background: linear-gradient(135deg, #fff 40%, var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: auto;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      transition: all 0.3s ease;
+    }
+    .status-badge.ready    { color: var(--success); border-color: var(--success); }
+    .status-badge.working  { color: var(--warning); border-color: var(--warning); }
+    .status-badge.done     { color: var(--accent2); border-color: var(--accent2); }
+    .status-badge.error    { color: var(--error);   border-color: var(--error); }
+
+    /* ─── Main grid ──────────────────────────────────── */
+    .main {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      overflow: hidden;
+    }
+
+    /* ─── Sidebar ─────────────────────────────────────── */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* ─── Sections ─────────────────────────────────────── */
+    .section {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+    }
+
+    /* ─── Form elements ───────────────────────────────── */
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    input, select, textarea {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 13px;
+      padding: 8px 10px;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+    }
+
+    select option { background: var(--surface2); }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+      line-height: 1.6;
+    }
+
+    /* ─── Buttons ─────────────────────────────────────── */
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 7px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover  { background: var(--accent2); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent2); }
+
+    .btn-success {
+      background: var(--success);
+      color: #000;
+    }
+    .btn-success:hover { filter: brightness(1.1); }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ─── Right panel ──────────────────────────────────── */
+    .panel-right {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      overflow: hidden;
+      padding: 20px;
+      gap: 16px;
+    }
+
+    .panel-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      overflow: hidden;
+    }
+
+    /* ─── Preview ──────────────────────────────────────── */
+    .preview-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      min-height: 300px;
+    }
+
+    .preview-placeholder {
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .preview-placeholder .icon { font-size: 40px; margin-bottom: 8px; }
+
+    #preview-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: none;
+      border-radius: 6px;
+    }
+
+    /* ─── Log ───────────────────────────────────────────── */
+    .log-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .log-header {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .log-clear {
+      font-size: 11px;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 400;
+    }
+    .log-clear:hover { color: var(--error); background: none; }
+
+    #log-output {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      font-family: 'Menlo', 'Consolas', monospace;
+      font-size: 11px;
+      line-height: 1.8;
+      color: #ccc;
+      background: transparent;
+      border: none;
+      resize: none;
+    }
+
+    #log-output::-webkit-scrollbar { width: 4px; }
+    #log-output::-webkit-scrollbar-track { background: transparent; }
+    #log-output::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .log-line-ts { color: var(--muted); }
+    .log-line-ok { color: var(--success); }
+    .log-line-err { color: var(--error); }
+    .log-line-info { color: var(--accent2); }
+
+    /* ─── Progress ─────────────────────────────────────── */
+    .progress-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+
+    .progress-label { color: var(--muted); font-weight: 600; }
+    #progress-pct   { color: var(--accent2); font-weight: 700; }
+
+    .progress-track {
+      height: 8px;
+      background: var(--surface2);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width 0.4s ease;
+      position: relative;
+    }
+
+    #progress-bar.animating::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 40px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
+      animation: shine 1.2s infinite;
+    }
+
+    @keyframes shine {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* ─── Download button ──────────────────────────────── */
+    #download-section {
+      display: none;
+    }
+
+    /* ─── Responsive ────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .main { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+      .sidebar { max-height: 50vh; }
+      .panel-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ─── Header ─────────────────────────────────────────── -->
+  <header>
+    <span class="header-logo">🎬</span>
+    <span class="header-title">Video Ads Factory</span>
+    <span class="header-sub">WebFactory RD</span>
+    <span class="status-badge ready" id="status-badge">Listo</span>
+  </header>
+
+  <!-- ─── Main ────────────────────────────────────────────── -->
+  <div class="main">
+
+    <!-- ─── Sidebar ──────────────────────────────────────── -->
+    <aside class="sidebar">
+
+      <!-- Template selector -->
+      <div class="section">
+        <div class="section-title">Template</div>
+        <label>
+          Seleccionar composición
+          <select id="template-select" onchange="onTemplateChange()">
+            <option value="">— Elegir template —</option>
+            <option value="HealthTemplate">Health Template</option>
+            <option value="RestaurantTemplate">Restaurant Template</option>
+            <option value="RealEstateTemplate">Real Estate Template</option>
+            <option value="BlueberryCandyAd">BlueberryCandyAd</option>
+            <option value="BlueberryAd">BlueberryAd</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Brand Kit -->
+      <div class="section">
+        <div class="section-title">Brand Kit</div>
+        <label>
+          Cargar brand kit
+          <select id="brandkit-select" onchange="onBrandKitChange()">
+            <option value="">— Sin brand kit —</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Config -->
+      <div class="section">
+        <div class="section-title">Configuración</div>
+
+        <label>
+          Nombre del Ad / Cliente
+          <input type="text" id="field-name" placeholder="Ej: Blueberry Candy — Oferta Diciembre" />
+        </label>
+
+        <label>
+          Composition ID
+          <input type="text" id="field-composition" placeholder="Ej: BlueberryCandyAd" />
+        </label>
+
+        <label>
+          Script para TTS
+          <textarea id="field-script" placeholder="Escribe el texto que leerá la voz..."></textarea>
+        </label>
+
+        <label>
+          Voice ID (ElevenLabs)
+          <input type="text" id="field-voice" value="hHjbwzYZW17oh0p05AKv" placeholder="ID de voz" />
+        </label>
+
+        <label>
+          Output filename (audio)
+          <input type="text" id="field-output" placeholder="Ej: candy-voice.mp3" />
+        </label>
+      </div>
+
+      <!-- Acciones -->
+      <div class="section">
+        <div class="section-title">Acciones</div>
+        <div class="btn-group">
+          <button class="btn-secondary" onclick="generateAudio()" id="btn-audio">
+            🎙️ Generar Voz
+          </button>
+          <button class="btn-secondary" onclick="previewFrame()" id="btn-preview">
+            📸 Vista Previa
+          </button>
+          <button class="btn-primary" onclick="startRender()" id="btn-render">
+            🎬 Renderizar Video
+          </button>
+          <div id="download-section">
+            <a id="download-link" href="#" style="text-decoration:none; display:block;">
+              <button class="btn-success" style="width:100%">
+                ⬇️ Descargar Video
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ─── Panel derecho ─────────────────────────────────── -->
+    <div class="panel-right">
+
+      <div class="panel-top">
+
+        <!-- Preview imagen -->
+        <div class="preview-box" id="preview-box">
+          <div class="preview-placeholder" id="preview-placeholder">
+            <div class="icon">🖼️</div>
+            <div>Aquí aparecerá<br/>la vista previa</div>
+          </div>
+          <img id="preview-img" alt="Frame preview" />
+        </div>
+
+        <!-- Log -->
+        <div class="log-box">
+          <div class="log-header">
+            Log de actividad
+            <button class="log-clear" onclick="clearLog()">Limpiar</button>
+          </div>
+          <textarea id="log-output" readonly></textarea>
+        </div>
+
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-section">
+        <div class="progress-header">
+          <span class="progress-label">Progreso del render</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div id="progress-bar"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // ─── Estado ────────────────────────────────────────────────────────────────
+  let currentJobId  = null
+  let pollInterval  = null
+
+  // Mapa composición → composition ID por defecto
+  const TEMPLATE_IDS = {
+    HealthTemplate:     'HealthTemplate',
+    RestaurantTemplate: 'RestaurantTemplate',
+    RealEstateTemplate: 'RealEstateTemplate',
+    BlueberryCandyAd:   'BlueberryCandyAd',
+    BlueberryAd:        'BlueberryAd',
+  }
+
+  // ─── Init ──────────────────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    fetchBrandKits()
+    addLog('Panel iniciado — Video Ads Factory', 'info')
+    setStatus('ready', 'Listo')
+  })
+
+  // ─── Template selector ─────────────────────────────────────────────────────
+  function onTemplateChange() {
+    const val = document.getElementById('template-select').value
+    if (val) {
+      document.getElementById('field-composition').value = TEMPLATE_IDS[val] || val
+      addLog(`Template seleccionado: ${val}`, 'info')
+    }
+  }
+
+  // ─── Brand Kits ────────────────────────────────────────────────────────────
+  async function fetchBrandKits() {
+    try {
+      const res  = await fetch('/brand-kits')
+      const kits = await res.json()
+      const sel  = document.getElementById('brandkit-select')
+
+      kits.forEach(kit => {
+        const opt   = document.createElement('option')
+        opt.value   = JSON.stringify(kit.data)
+        opt.textContent = kit.name
+        sel.appendChild(opt)
+      })
+
+      if (kits.length > 0) {
+        addLog(`${kits.length} brand kit(s) cargados`, 'info')
+      }
+    } catch (err) {
+      addLog(`Error cargando brand kits: ${err.message}`, 'error')
+    }
+  }
+
+  function onBrandKitChange() {
+    const sel = document.getElementById('brandkit-select')
+    if (!sel.value) return
+
+    try {
+      const data = JSON.parse(sel.value)
+
+      // Rellenar campos si existen en el brand kit
+      if (data.name)          document.getElementById('field-name').value        = data.name
+      if (data.compositionId) document.getElementById('field-composition').value = data.compositionId
+      if (data.script)        document.getElementById('field-script').value       = data.script
+      if (data.voiceId)       document.getElementById('field-voice').value        = data.voiceId
+      if (data.outputFile)    document.getElementById('field-output').value       = data.outputFile
+
+      // Sincronizar template selector si aplica
+      if (data.compositionId) {
+        const tmplSel = document.getElementById('template-select')
+        const opt = [...tmplSel.options].find(o => o.value === data.compositionId)
+        if (opt) tmplSel.value = data.compositionId
+      }
+
+      addLog(`Brand kit cargado: ${sel.options[sel.selectedIndex].text}`, 'ok')
+    } catch (err) {
+      addLog(`Error parseando brand kit: ${err.message}`, 'error')
+    }
+  }
+
+  // ─── Generate Audio ────────────────────────────────────────────────────────
+  async function generateAudio() {
+    const text       = document.getElementById('field-script').value.trim()
+    const voiceId    = document.getElementById('field-voice').value.trim()
+    const outputFile = document.getElementById('field-output').value.trim()
+
+    if (!text)       return addLog('Error: el script está vacío', 'error')
+    if (!outputFile) return addLog('Error: falta el output filename', 'error')
+
+    setStatus('working', 'Generando voz...')
+    setBtnDisabled(true)
+    addLog(`Generando audio → ${outputFile}...`, 'info')
+
+    try {
+      const res  = await fetch('/generate-audio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, voiceId: voiceId || undefined, outputFile }),
+      })
+      const data = await res.json()
+
+      if (data.ok) {
+        addLog(`Audio generado: ${data.file} (${data.size})`, 'ok')
+        setStatus('ready', 'Listo')
+      } else {
+        addLog(`Error TTS: ${data.error}`, 'error')
+        setStatus('error', 'Error')
+      }
+    } catch (err) {
+      addLog(`Error de red: ${err.message}`, 'error')
+      setStatus('error', 'Error')
+    } finally {
+      setBtnDisabled(false)
+    }
+  }
+
+  // ─── Preview Frame ─────────────────────────────────────────────────────────
+  async function previewFrame() {
+    const compositionId = document.getElementById('field-composition').value.trim()
+    if (!compositionId) return addLog('Error: elige un template o escribe el Composition ID', 'error')
+
+    setStatus('working', 'Generando preview...')
+    setBtnDisabled(true)
+    addLog(`Capturando frame 0 de ${compositionId}...`, 'info')
+
+    try {
+      const res  = await fetch('/screenshot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ compositionId, frame: 0 }),
+      })
+      const data = await res.json()
+
+      if (data.ok) {
+        // Cargar imagen con cache-bust
+        const img = document.getElementById('preview-img')
+        img.src   = data.url + '?t=' + Date.now()
+        img.style.display = 'block'
+        document.getElementById('preview-placeholder').style.display = 'none'
+        addLog(`Preview generado: ${data.url}`, 'ok')
+        setStatus('ready', 'Listo')
+      } else {
+        addLog(`Error screenshot: ${data.error}`, 'error')
+        setStatus('error', 'Error')
+      }
+    } catch (err) {
+      addLog(`Error de red: ${err.message}`, 'error')
+      setStatus('error', 'Error')
+    } finally {
+      setBtnDisabled(false)
+    }
+  }
+
+  // ─── Render ────────────────────────────────────────────────────────────────
+  async function startRender() {
+    const compositionId = document.getElementById('field-composition').value.trim()
+    if (!compositionId) return addLog('Error: elige un template o escribe el Composition ID', 'error')
+
+    // Reset estado
+    setProgress(0)
+    hideDownload()
+    setStatus('working', 'Renderizando...')
+    setBtnDisabled(true)
+    addLog(`Iniciando render: ${compositionId}...`, 'info')
+
+    try {
+      const res  = await fetch('/render', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ compositionId }),
+      })
+      const data = await res.json()
+
+      if (!data.ok) {
+        addLog(`Error al iniciar render: ${data.error}`, 'error')
+        setStatus('error', 'Error')
+        setBtnDisabled(false)
+        return
+      }
+
+      currentJobId = data.jobId
+      addLog(`Job iniciado: ${currentJobId}`, 'info')
+      document.getElementById('progress-bar').classList.add('animating')
+
+      // Polling cada 2 segundos
+      pollInterval = setInterval(pollRenderStatus, 2000)
+
+    } catch (err) {
+      addLog(`Error de red: ${err.message}`, 'error')
+      setStatus('error', 'Error')
+      setBtnDisabled(false)
+    }
+  }
+
+  async function pollRenderStatus() {
+    if (!currentJobId) return
+
+    try {
+      const res  = await fetch(`/render-status/${currentJobId}`)
+      const data = await res.json()
+
+      setProgress(data.progress || 0)
+
+      if (data.status === 'done') {
+        clearInterval(pollInterval)
+        pollInterval = null
+        document.getElementById('progress-bar').classList.remove('animating')
+        setProgress(100)
+        setStatus('done', 'Completado')
+        setBtnDisabled(false)
+
+        // Extraer solo el filename del path
+        const filename = data.outputFile.split('/').pop().split('\\').pop()
+        showDownload(filename)
+        addLog(`Render completado: ${data.outputFile}`, 'ok')
+
+      } else if (data.status === 'error') {
+        clearInterval(pollInterval)
+        pollInterval = null
+        document.getElementById('progress-bar').classList.remove('animating')
+        setStatus('error', 'Error')
+        setBtnDisabled(false)
+        addLog(`Error en render: ${data.error}`, 'error')
+      } else {
+        addLog(`Renderizando... ${data.progress}%`, 'info')
+      }
+    } catch (err) {
+      addLog(`Error consultando estado: ${err.message}`, 'error')
+    }
+  }
+
+  // ─── Helpers UI ────────────────────────────────────────────────────────────
+  function setStatus(type, text) {
+    const badge = document.getElementById('status-badge')
+    badge.className = `status-badge ${type}`
+    badge.textContent = text
+  }
+
+  function setProgress(pct) {
+    document.getElementById('progress-bar').style.width = pct + '%'
+    document.getElementById('progress-pct').textContent  = pct + '%'
+  }
+
+  function showDownload(filename) {
+    document.getElementById('download-link').href = `/download/${filename}`
+    document.getElementById('download-section').style.display = 'block'
+  }
+
+  function hideDownload() {
+    document.getElementById('download-section').style.display = 'none'
+  }
+
+  function setBtnDisabled(disabled) {
+    ['btn-audio', 'btn-preview', 'btn-render'].forEach(id => {
+      document.getElementById(id).disabled = disabled
+    })
+  }
+
+  function addLog(msg, type = '') {
+    const area = document.getElementById('log-output')
+    const now  = new Date().toLocaleTimeString('es', { hour12: false })
+    const prefix = type === 'ok' ? '✓' : type === 'error' ? '✗' : type === 'info' ? '›' : '·'
+    area.value += `[${now}] ${prefix} ${msg}\n`
+    area.scrollTop = area.scrollHeight
+  }
+
+  function clearLog() {
+    document.getElementById('log-output').value = ''
+  }
+</script>
+</body>
+</html>
