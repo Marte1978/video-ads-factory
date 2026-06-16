@@ -38,6 +38,7 @@ import { batch24 } from './compositions/bioscan/batch24-data'
 import { batch25 } from './compositions/bioscan/batch25-data'
 import { batch26 } from './compositions/bioscan/batch26-data'
 import { batch27 } from './compositions/bioscan/batch27-data'
+import { batch28 } from './compositions/bioscan/batch28-data'
 
 // ── Presmin — Props generadas por PROMETHEUS 2026-06-14 ──────────────────────
 
@@ -814,6 +815,24 @@ export const RemotionRoot: React.FC = () => {
       {/* ── Batch 27 — 500 Videos BioScan — Copies 261-270 ───────────────── */}
       {batch27.map((props, i) => {
         const n = String(i + 261).padStart(3, "0");
+        return (
+          <Composition
+            key={`BioScan${n}`}
+            id={`BioScan${n}`}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            component={BioScanProAd as any}
+            durationInFrames={props.durationInFrames ?? 1800}
+            fps={30}
+            width={1080}
+            height={1920}
+            defaultProps={props}
+          />
+        );
+      })}
+
+      {/* ── Batch 28 — 500 Videos BioScan — Copies 271-280 ───────────────── */}
+      {batch28.map((props, i) => {
+        const n = String(i + 271).padStart(3, "0");
         return (
           <Composition
             key={`BioScan${n}`}
