@@ -6,6 +6,53 @@ import { HealthTemplate } from './compositions/templates/HealthTemplate'
 import { RestaurantTemplate } from './compositions/templates/RestaurantTemplate'
 import { RealEstateTemplate } from './compositions/templates/RealEstateTemplate'
 import { HealthAdProps, RestaurantAdProps, RealEstateAdProps } from './shared/types'
+import { PresminHybrid } from './PresminHybrid'
+import { PresminHybrid60 } from './PresminHybrid60'
+import { PresminV3 } from './PresminV3'
+import { BioScanProAd } from './compositions/bioscan/BioScanProAd'
+import { bioscanV1, bioscanV2, bioscanV3, bioscanV5 } from './compositions/bioscan/bioscan-data'
+import { batch01 } from './compositions/bioscan/batch01-data'
+
+// ── Presmin — Props generadas por PROMETHEUS 2026-06-14 ──────────────────────
+
+const presminProps: HealthAdProps = {
+  brandName:    'Presmin',
+  productName:  'PRESMIN',
+  tagline:      'Cuida tu próstata. Vive mejor.',
+  hookQuestion: '¿Te preocupa la salud de tu próstata?\nNo estás solo.',
+  hookEmoji:    '🛡️',
+  symptoms: [
+    { icon: '🚽', text: 'Levantarte varias veces en la noche' },
+    { icon: '💧', text: 'Chorro débil o goteo al orinar' },
+    { icon: '⚡', text: 'Urgencia repentina e incontrolable' },
+  ],
+  ingredients: ['🌿 Saw Palmetto', '⚡ Zinc', '🔬 Betasitosterol', '🌱 Licopeno'],
+  badgeText:    'Fórmula Natural Certificada',
+  priceFinal:   'RD$2,190',
+  pricePerDay:  'Solo RD$73 al día',
+  offerText:    '30 cápsulas — 30 días de protección total',
+  unitsLeft:    12,
+  socialProof:  'Más de 500 hombres en RD ya cuidan su próstata con Presmin',
+  ctaText:      'QUIERO MI PRESMIN',
+  ctaSubtext:   'presmin.webfactoryrd.com',
+  audioFile:    'audio/presmin-voice.mp3',
+  productImageFile: 'images/product.png',
+  colors: {
+    bg:        '#040D18',
+    bg2:       '#081929',
+    primary:   '#1D4ED8',
+    accent:    '#3B82F6',
+    text:      '#FFFFFF',
+    textMuted: '#93C5FD',
+    highlight: '#FBBF24',
+    cta:       '#1D4ED8',
+    ctaText:   '#FFFFFF',
+  },
+  background: {
+    type:           'gradient',
+    gradientColors: ['#1D4ED8', '#3B82F6', '#040D18'],
+  },
+}
 
 // ── Default props reutilizables ───────────────────────────────────────────────
 
@@ -140,6 +187,18 @@ export const RemotionRoot: React.FC = () => {
 
       {/* ── Templates configurables ──────────────────────────────────────── */}
 
+      {/* Presmin — generado por PROMETHEUS */}
+      <Composition
+        id="PresminAd"
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        component={HealthTemplate as any}
+        durationInFrames={1080}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={presminProps}
+      />
+
       {/* Health / Suplementos — 36s */}
       <Composition
         id="HealthTemplate"
@@ -175,6 +234,106 @@ export const RemotionRoot: React.FC = () => {
         height={1920}
         defaultProps={defaultRealEstateProps}
       />
+
+      {/* Presmin V3 — 65s, fuentes grandes, imagen vertical, URL final, fade out */}
+      <Composition
+        id="PresminV3"
+        component={PresminV3}
+        durationInFrames={1950}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+
+      {/* Presmin Hybrid 60s — Pexels + Remotion overlays + producto + transiciones */}
+      <Composition
+        id="PresminHybrid60"
+        component={PresminHybrid60}
+        durationInFrames={1800}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+
+      {/* Presmin Hybrid — 36s — Pexels + Remotion overlays */}
+      <Composition
+        id="PresminHybrid"
+        component={PresminHybrid}
+        durationInFrames={1080}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+
+      {/* ── BioScan IA — 5 variantes × 60s ─────────────────────────────── */}
+
+      {/* ── BioScan IA Pro — 4 variantes × 60s con OffthreadVideo ─────────── */}
+
+      {/* Pro V1 — Miedo/Prevención — es-CO-GonzaloNeural */}
+      <Composition
+        id="BioScanProV1"
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        component={BioScanProAd as any}
+        durationInFrames={1800}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={bioscanV1}
+      />
+
+      {/* Pro V2 — Precio/Acceso — es-MX-JorgeNeural */}
+      <Composition
+        id="BioScanProV2"
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        component={BioScanProAd as any}
+        durationInFrames={1800}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={bioscanV2}
+      />
+
+      {/* Pro V3 — Velocidad/Conveniencia — es-ES-AlvaroNeural */}
+      <Composition
+        id="BioScanProV3"
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        component={BioScanProAd as any}
+        durationInFrames={1800}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={bioscanV3}
+      />
+
+      {/* Pro V5 — Tecnología/Credibilidad — es-CL-LorenzoNeural */}
+      <Composition
+        id="BioScanProV5"
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        component={BioScanProAd as any}
+        durationInFrames={1800}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={bioscanV5}
+      />
+
+      {/* ── Batch 01 — 500 Videos BioScan — Copies 001-010 ───────────────── */}
+      {batch01.map((props, i) => {
+        const n = String(i + 1).padStart(3, "0");
+        return (
+          <Composition
+            key={`BioScan${n}`}
+            id={`BioScan${n}`}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            component={BioScanProAd as any}
+            durationInFrames={props.durationInFrames ?? 1800}
+            fps={30}
+            width={1080}
+            height={1920}
+            defaultProps={props}
+          />
+        );
+      })}
     </>
   )
 }
