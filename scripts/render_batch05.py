@@ -76,6 +76,9 @@ for v in VIDEOS:
     ]
     rc, out, err = run(cmd, cwd=str(BASE))
     if rc != 0:
+        print(f"  [RETRY] Primer intento fallo (EPIPE?). Reintentando...")
+        rc, out, err = run(cmd, cwd=str(BASE))
+    if rc != 0:
         log(f"[X]    {mp4_name} -- FALLO")
         print(err[-500:], file=sys.stderr)
         continue
